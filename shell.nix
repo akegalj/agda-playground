@@ -22,11 +22,29 @@ in with pkgs; mkShell {
       configure = {
         customRC = builtins.readFile ../nixos-config/vimrc + ''
           let g:cornelis_use_global_binary = 1
+
+          au BufRead,BufNewFile *.agda call AgdaFiletype()
+          function! AgdaFiletype()
+              nnoremap <buffer> <leader>l :CornelisLoad<CR>
+              nnoremap <buffer> <leader>r :CornelisRefine<CR>
+              nnoremap <buffer> <leader>d :CornelisMakeCase<CR>
+              nnoremap <buffer> <leader>, :CornelisTypeContext<CR>
+              nnoremap <buffer> <leader>. :CornelisTypeContextInfer<CR>
+              nnoremap <buffer> <leader>n :CornelisSolve<CR>
+              nnoremap <buffer> <leader>a :CornelisAuto<CR>
+              nnoremap <buffer> gd        :CornelisGoToDefinition<CR>
+              nnoremap <buffer> [/        :CornelisPrevGoal<CR>
+              nnoremap <buffer> ]/        :CornelisNextGoal<CR>
+              nnoremap <buffer> <C-A>     :CornelisInc<CR>
+              nnoremap <buffer> <C-X>     :CornelisDec<CR>
+          endfunction
         '';
         packages.myVimPackage = with vimPlugins; {
           # see examples below how to use custom packages
           start = [
             vimPlugins.cornelis
+            # vim-which-key
+            # nvim-hs-vim
 
             vim-nix
             vim-lastplace
